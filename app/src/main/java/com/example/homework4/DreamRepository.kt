@@ -2,6 +2,7 @@ package com.example.homework4
 
 
 import kotlinx.coroutines.flow.Flow
+import java.sql.Date
 
 class DreamRepository(private val dreamDao: DreamDAO) {
 
@@ -29,8 +30,8 @@ class DreamRepository(private val dreamDao: DreamDAO) {
         return dreamDao.select(id)
     }
 
-    suspend fun update (id:Int, title:String, content:String, reflection:String, emotion:String){
-        dreamDao.update(id, title, content, reflection, emotion,)
+    suspend fun update (id:Int, title:String, date:String, content:String, reflection:String, emotion:String){
+        dreamDao.update(id, title, date, content, reflection, emotion,)
     }
 
 

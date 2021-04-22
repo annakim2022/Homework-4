@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 class DetailActivity: AppCompatActivity()  {
 
     private lateinit var textViewTitle:TextView
+    private lateinit var textViewDate:TextView
     private lateinit var textViewContent:TextView
     private lateinit var textViewReflection:TextView
     private lateinit var textViewEmotion:TextView
@@ -29,6 +30,7 @@ class DetailActivity: AppCompatActivity()  {
         setContentView(R.layout.activity_detail)
 
         textViewTitle = findViewById(R.id.textView_title)
+        textViewDate = findViewById(R.id.textView_date)
         textViewContent = findViewById(R.id.textView_content)
         textViewReflection = findViewById(R.id.textView_reflection)
         textViewEmotion = findViewById(R.id.textView_emotion)
@@ -44,11 +46,12 @@ class DetailActivity: AppCompatActivity()  {
 
             if (it!=null) {
                 textViewTitle.text = it.title
+                textViewDate.text = it.date
                 textViewContent.text = it.content
                 textViewReflection.text = it.reflection
                 textViewEmotion.text = it.emotion
                 test = it.id.toString()
-                dreamLog = arrayOf(it.id.toString(), it.title, it.content, it.reflection, it.emotion)
+                dreamLog = arrayOf(it.id.toString(), it.title, it.date, it.content, it.reflection, it.emotion)
             }
 
         })
@@ -65,6 +68,7 @@ class DetailActivity: AppCompatActivity()  {
 
             intent.putExtra("id", test)
             intent.putExtra("title", textViewTitle.text)
+            intent.putExtra("date", textViewDate.text)
             intent.putExtra("content", textViewContent.text)
             intent.putExtra("reflection", textViewReflection.text)
             intent.putExtra("emotion", textViewEmotion.text)

@@ -5,10 +5,12 @@ import android.text.TextUtils
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import java.sql.Date
 
 class AddActivity: AppCompatActivity() {
 
     private lateinit var editTextTitle: EditText
+    private lateinit var editTextDate: EditText
     private lateinit var editTextContent: EditText
     private lateinit var editTextReflection: EditText
     private lateinit var spinner: Spinner
@@ -25,27 +27,33 @@ class AddActivity: AppCompatActivity() {
 
 
         editTextTitle= findViewById(R.id.edit_title)
+        editTextDate = findViewById(R.id.edit_date)
         editTextContent= findViewById(R.id.edit_content)
         editTextReflection= findViewById(R.id.edit_reflection)
         spinner = findViewById(R.id.spinner)
         buttonSave = findViewById(R.id.button_save)
-        spinner = findViewById(R.id.spinner)
-        searchSpinner()
+        spinner()
 
 
         // catch user input error in front end
         buttonSave.setOnClickListener {
-            if (TextUtils.isEmpty(editTextTitle.text) || TextUtils.isEmpty(editTextContent.text) ||
+            if (TextUtils.isEmpty(editTextTitle.text) || TextUtils.isEmpty(editTextDate.text)  || TextUtils.isEmpty(editTextContent.text) ||
                     TextUtils.isEmpty(editTextReflection.text) || spinner.selectedItem.toString() == "HOW DID YOU FEEL?") {
                 toastError("Missing field(s)")
 
             } else {
                 // grab the text and make it into a Dream type
                 // call the insert function to insert into my database
-                val dream = Dream(0, editTextTitle.text.toString(), editTextContent.text.toString(),
-                                    editTextReflection.text.toString(), spinner.selectedItem.toString())
-                dreamViewModel.insert(dream)
-                finish()
+                    try {
+                        val date = Date.valueOf(editTextDate.text.toString());
+                        val dream = Dream(0, editTextTitle.text.toString(), date.toString(), editTextContent.text.toString(),
+                                editTextReflection.text.toString(), spinner.selectedItem.toString())
+                        dreamViewModel.insert(dream)
+                        finish()
+                    }
+                    catch(e: Exception){
+                        Toast.makeText(this, "Date format is incorrect", Toast.LENGTH_LONG).show()
+                    }
 
             }
         }
@@ -55,9 +63,9 @@ class AddActivity: AppCompatActivity() {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
-    private fun searchSpinner(){
+    private fun spinner(){
         val searchMethod = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, emotions)
         searchMethod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner!!.adapter = searchMethod
+        spinner.adapter = searchMethod
     }
 }

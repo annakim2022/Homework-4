@@ -18,7 +18,7 @@ class DreamListAdapter : ListAdapter<Dream, DreamListAdapter.DreamViewHolder>(Dr
 
     override fun onBindViewHolder(holder: DreamViewHolder, position: Int) {
         val currentDream = getItem(position)
-        holder.bindText(currentDream.id.toString(), holder.textViewID)
+        holder.bindText(currentDream.date, holder.textViewDate)
         holder.bindText(currentDream.title, holder.textViewName)
 
         holder.itemView.setOnClickListener{
@@ -31,7 +31,7 @@ class DreamListAdapter : ListAdapter<Dream, DreamListAdapter.DreamViewHolder>(Dr
     }
 
     class DreamViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
-        val textViewID: TextView = itemView.findViewById(R.id.textView_id)
+        val textViewDate: TextView = itemView.findViewById(R.id.textView_date)
         val textViewName: TextView = itemView.findViewById(R.id.textView_name)
 
         // write a helper function that takes a string and a text view

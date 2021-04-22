@@ -6,10 +6,12 @@ import android.text.TextUtils
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import java.sql.Date
 
 class UpdateActivity: AppCompatActivity() {
 
     private lateinit var editTextTitle: EditText
+    private lateinit var editTextDate: EditText
     private lateinit var editTextContent: EditText
     private lateinit var editTextReflection: EditText
     private lateinit var spinner: Spinner
@@ -25,27 +27,26 @@ class UpdateActivity: AppCompatActivity() {
         setContentView(R.layout.activity_add)
 
         editTextTitle= findViewById(R.id.edit_title)
+        editTextDate= findViewById(R.id.edit_date)
         editTextContent= findViewById(R.id.edit_content)
         editTextReflection= findViewById(R.id.edit_reflection)
         spinner = findViewById(R.id.spinner)
         buttonSave = findViewById(R.id.button_save)
-        spinner = findViewById(R.id.spinner)
-        searchSpinner()
+        spinner()
 
         val old = intent.getStringExtra("id") as String
         val id: Int = Integer.parseInt(old)
         val title = intent.getStringExtra("title")
+        val date = intent.getStringExtra("date")
         val content = intent.getStringExtra("content")
         val reflection = intent.getStringExtra("reflection")
         val emotion = intent.getStringExtra("emotion")
 
         editTextTitle.setText(title, TextView.BufferType.EDITABLE);
+        editTextDate.setText(date, TextView.BufferType.EDITABLE)
         editTextContent.setText(content, TextView.BufferType.EDITABLE)
         editTextReflection.setText(reflection, TextView.BufferType.EDITABLE)
 
-        //editTextTitle.text = title as Editable
-        //editTextContent.text = content as Editable
-        //editTextReflection.text = reflection as Editable
 
         if (emotion == "fear"){
             spinner.setSelection(1)
@@ -80,16 +81,21 @@ class UpdateActivity: AppCompatActivity() {
 
         // catch user input error in front end
         buttonSave.setOnClickListener {
-            if (TextUtils.isEmpty(editTextTitle.text) || TextUtils.isEmpty(editTextContent.text) ||
+            if (TextUtils.isEmpty(editTextTitle.text) || TextUtils.isEmpty(editTextDate.text) || TextUtils.isEmpty(editTextContent.text) ||
                     TextUtils.isEmpty(editTextReflection.text) || spinner.selectedItem.toString() == "choose emotion") {
                 toastError("Missing field(s)")
 
             } else {
-
-                dreamViewModel.update(id, editTextTitle.text.toString(), editTextContent.text.toString(),
-                        editTextReflection.text.toString(), spinner.selectedItem.toString())
-                finish()
-            }
+                try {
+                    val date = Date.valueOf(editTextDate.text.toString());
+                    dreamViewModel.update(id, editTextTitle.text.toString(), date.toString(), editTextContent.text.toString(),
+                            editTextReflection.text.toString(), spinner.selectedItem.toString())
+                    finish()
+                }
+                catch (e: Exception) {
+                    Toast.makeText(this, "Date format is incorrect", Toast.LENGTH_LONG).show()
+                }
+           }
         }
     }
 
@@ -97,9 +103,9 @@ class UpdateActivity: AppCompatActivity() {
         Toast.makeText(this, text, Toast.LENGTH_LONG).show()
     }
 
-    private fun searchSpinner(){
+    private fun spinner(){
         val searchMethod = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, emotions)
         searchMethod.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spinner!!.adapter = searchMethod
+        spinner.adapter = searchMethod
     }
 }
